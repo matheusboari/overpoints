@@ -1,10 +1,29 @@
-var express = require('express')
-var app = express()
+const express = require('express'),
+  bodyParser = require('body-parser'),
+  app = express()
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Origin", "*", "Origin, X-Request-With, Content-Type, Accept")
+  next()
 })
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+//router
+app.use('/', require('./routes'))
+
+//error handling
+app.use((req, res, next) => {
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
 })
+
+app.use((err, req, res, next) => {
+  console.log(err.stack)
+  res.status(err.status || 500).json({ err: err.message })
+})
+
+module.exports = app
