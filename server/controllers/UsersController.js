@@ -1,4 +1,3 @@
-'use strict'
 const debug = require('debug')('overpointsdb:controller'),
     Promise = require('bluebird')
 
@@ -15,31 +14,31 @@ function UsersController(UsersModel) {
     this.model = Promise.promisifyAll(UsersModel)
 }
 
-UsersController.prototype.getAll = (req, res, next) => {
-    this.model.findAsync({}) 
+UsersController.prototype.getAll = function(req, res, next) {
+    this.model.findAsync({})
         .then(data => {
             res.json(data)
         })
         .catch(next)
 }
-UsersController.prototype.getById = (req, res, next) => {
+UsersController.prototype.getById = function(req, res, next) {
     const _id = req.params._id
-    this.model.findOneAsync((_id)) 
+    this.model.findOneAsync(_id)
         .then(handleNotFound)
         .then(data => {
             res.json(data)
         })
         .catch(next)
 }
-UsersController.prototype.create = (req, res, next) => {
+UsersController.prototype.create = function(req, res, next) {
     const body = req.body
     this.model.createAsync(body)
     .then((err, data) => {
-        res.json(data)
+        res.json({ status: true})
     })
     .catch(next)
 }
-UsersController.prototype.update = (req, res, next) => {
+UsersController.prototype.update = function(req, res, next) {
     const _id = req.params._id,
         body = req.body
     this.model.updateAsync(_id, body)
@@ -48,7 +47,7 @@ UsersController.prototype.update = (req, res, next) => {
         })
         .catch(next)
 }
-UsersController.prototype.remove = (req, res, next) => {
+UsersController.prototype.remove = function(req, res, next) {
     const _id = req.params._id
     this.model.removeAsync(_id) 
     .then((err, data) => {
@@ -57,6 +56,6 @@ UsersController.prototype.remove = (req, res, next) => {
     .catch(next)
 }
 
-module.exports = UsersModel => {
+module.exports = (UsersModel) => {
     return new UsersController(UsersModel)
 }
