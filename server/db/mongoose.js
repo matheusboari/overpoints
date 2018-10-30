@@ -1,8 +1,9 @@
 const mongoose = require('mongoose'),
     debug = require('debug')('overpoints:db'),
     config = require('config')
+
 'use strict'
-mongoose.connect('mongodb://matheusboari:ItQxuV7A@ds039960.mlab.com:39960/overpointsdb', { useNewUrlParser: true })
+mongoose.connect('', { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', err => {
     debug(err)

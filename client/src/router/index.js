@@ -8,7 +8,8 @@ Vue.use(Router)
 
 export const constantRouterMap = [
     { path: '', name: 'login', component: login },
-    { path: '/register', name: 'register', component: register }
+    { path: '/register', name: 'register', component: register },
+    { path: '/dashboard', name: 'dashboard' }
 ]
 
 export default new Router({

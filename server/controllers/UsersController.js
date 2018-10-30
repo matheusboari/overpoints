@@ -23,20 +23,44 @@ UsersController.prototype.getAll = function(req, res, next) {
 }
 UsersController.prototype.getById = function(req, res, next) {
     const _id = req.params._id
-    this.model.findOneAsync(_id)
+    this.model.findByIdAsync(_id)
         .then(handleNotFound)
         .then(data => {
             res.json(data)
         })
         .catch(next)
 }
-UsersController.prototype.create = function(req, res, next) {
+UsersController.prototype.login = function(req, res, next) {
     const body = req.body
-    this.model.createAsync(body)
-    .then((err, data) => {
-        res.json({ status: true})
+    this.model.findAsync({username: body.username})
+    .then(data => {
+        if(data.length == 0) {
+            return res.json({ status: false, details: 'User not found' })
+        } else return res.json({ status: true, data: data })
     })
-    .catch(next)
+}
+UsersController.prototype.register = function(req, res, next) {
+    const body = req.body
+    
+    this.model.findAsync({username: body.username})
+    .then(data => {
+        if(data.length == 0) {
+            this.model.findAsync({email: body.email})
+            .then(data => {
+                if(data.length == 0) {
+                    this.model.createAsync(body)
+                    .then((err, data) => {
+                        return res.json({ status: true})
+                    })
+                    .catch(next)
+                } else {
+                    return res.json({ status: false, details: 'E-mail is already used' })
+                }
+            })
+        } else {
+            return res.json({ status: false, details: 'Username is already used' })
+        }
+    })
 }
 UsersController.prototype.update = function(req, res, next) {
     const _id = req.params._id,
@@ -46,14 +70,6 @@ UsersController.prototype.update = function(req, res, next) {
             res.json(data)
         })
         .catch(next)
-}
-UsersController.prototype.remove = function(req, res, next) {
-    const _id = req.params._id
-    this.model.removeAsync(_id) 
-    .then((err, data) => {
-        res.json(data)
-    })
-    .catch(next)
 }
 
 module.exports = (UsersModel) => {

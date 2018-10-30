@@ -4,10 +4,10 @@
             <h1 class="title">OverPoints</h1>
         </div>
         <div class="form">
-            <el-input placeholder="Username" name="user" v-validate="'required|alpha|min:6'" class="input" v-model="form.user" />
-            <el-input placeholder="E-mail" name="email" v-validate="'required|email'" class="input" v-model="form.email" />
-            <el-input placeholder="Senha" name="pass" ref="pass" v-validate="'required|min:6'" class="input" type="password" v-model="form.password" />
-            <el-input placeholder="Confirmar Senha" name="confirmpass" v-validate="'required|min:6|confirmed:pass'" class="input" type="password" v-model="form.confirmPass" />
+            <el-input placeholder="Username" name="user" v-validate="'required|alpha|min:6'" class="input" v-model="username" />
+            <el-input placeholder="E-mail" name="email" v-validate="'required|email'" class="input" v-model="email" />
+            <el-input placeholder="Senha" name="pass" ref="pass" v-validate="'required|min:6'" class="input" type="password" v-model="password" />
+            <el-input placeholder="Confirmar Senha" name="confirmpass" v-validate="'required|min:6|confirmed:pass'" class="input" type="password" v-model="confirmPass" />
 
             <el-button type="primary" @click="register" class="btn" round>Registrar</el-button>
 
@@ -20,12 +20,10 @@
 export default {
     data() {
         return {
-            form: {
-                username: '',
-                email: '',
-                password: '',
-                confirmPass: ''
-            }
+            username: '',
+            email: '',
+            password: '',
+            confirmPass: ''
         }
     },
     methods: {
@@ -46,16 +44,26 @@ export default {
                 if(result) return true
                 else return this.$swal('Oops...', 'A confirmação da senha deve ser preenchida corretamente.', 'error')
             })
-            
-            this.$http.post('users', {
-                username: this.form.username,
-                email: this.form.email,
-                password: this.form.password
+
+            this.$http.post('users/register', {
+                username: this.username,
+                email: this.email,
+                password: this.password
             })
             .then(({ data }) => {
-                console.log(data)
-                if(data.status)
+                if(data.status) {
+                    this.$http.post('users/login', {
+                        username: this.username,
+                        password: this.password
+                    })
+                    .then(({ data }) => {
+                        localStorage.setItem('user', data.data)
+                    })
                     this.$swal('Success!', 'Cadastro realizado com sucesso.', 'success')
+                    .then(() => {
+                        this.$router.push({ name: 'dashboard' })
+                    })
+                }
                 else 
                     this.$swal('Oops...', 'Algo deu errado, tente novamente mais tarde.', 'error')
             })
