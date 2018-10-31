@@ -5,42 +5,5 @@
 </template>
 
 <style lang="scss">
-* {
-    margin: 0;
-    padding: 0;
-    border: none;
-}
-
-a {
-  text-decoration: none;
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 14px;
-}
-
-::-webkit-scrollbar{ width:9px; height:9px; }
-::-webkit-scrollbar-button:start:decrement, 
-::-webkit-scrollbar-button:end:increment{ 
-  display:block;
-  height:0;
-  background-color:transparent;
-}
-::-webkit-scrollbar-track-piece{
-  background-color:#FAFAFA;
-  -webkit-border-radius:0;
-  -webkit-border-bottom-right-radius:8px;
-  -webkit-border-bottom-left-radius:8px;
-}
-::-webkit-scrollbar-thumb:vertical{
-  height:50px;
-  background-color:rgb(168, 167, 167);
-  -webkit-border-radius:8px;
-}
-::-webkit-scrollbar-thumb:horizontal{
-  width:50px;
-  background-color:rgb(168, 167, 167);
-  -webkit-border-radius:8px;
-}
+@import '~styles/default-theme';
 </style>

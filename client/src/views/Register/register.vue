@@ -4,10 +4,18 @@
             <h1 class="title">OverPoints</h1>
         </div>
         <div class="form">
-            <el-input placeholder="Username" name="user" v-validate="'required|alpha|min:6'" class="input" v-model="username" />
-            <el-input placeholder="E-mail" name="email" v-validate="'required|email'" class="input" v-model="email" />
-            <el-input placeholder="Senha" name="pass" ref="pass" v-validate="'required|min:6'" class="input" type="password" v-model="password" />
-            <el-input placeholder="Confirmar Senha" name="confirmpass" v-validate="'required|min:6|confirmed:pass'" class="input" type="password" v-model="confirmPass" />
+            <div class="wrapinput">
+                <el-input placeholder="Username" name="user" v-validate="'required|alpha|min:6'" class="input" v-model="username" />
+            </div>
+            <div class="wrapinput">
+                <el-input placeholder="E-mail" name="email" v-validate="'required|email'" class="input" v-model="email" />
+            </div>
+            <div class="wrapinput">
+                <el-input placeholder="Senha" name="pass" ref="pass" v-validate="'required|min:6'" class="input" type="password" v-model="password" />
+            </div>
+            <div class="wrapinput">
+                <el-input placeholder="Confirmar Senha" name="confirmpass" v-validate="'required|min:6|confirmed:pass'" class="input" type="password" v-model="confirmPass" />
+            </div>
 
             <el-button type="primary" @click="register" class="btn" round>Registrar</el-button>
 
@@ -57,7 +65,7 @@ export default {
                         password: this.password
                     })
                     .then(({ data }) => {
-                        localStorage.setItem('user', data.data)
+                        localStorage.setItem('user', JSON.stringify(data.data))
                     })
                     this.$swal('Success!', 'Cadastro realizado com sucesso.', 'success')
                     .then(() => {
@@ -75,7 +83,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '~styles/default-theme';
-</style>
