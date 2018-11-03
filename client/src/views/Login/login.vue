@@ -37,7 +37,7 @@ export default {
                     })
                     .then(({ data }) => {
                         if(data.status) {
-                            localStorage.setItem('user', JSON.stringify(data.data))
+                            localStorage.setItem('user', JSON.stringify(data.data[0]))
                             this.$router.push({ name: 'dashboard' })
                         } else {
                             this.$swal('Oops...', 'Você não está cadastrado. Cadastre-se, é de graça :D.', 'error')

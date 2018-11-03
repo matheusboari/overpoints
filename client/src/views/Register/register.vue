@@ -8,6 +8,9 @@
                 <el-input placeholder="Username" name="user" v-validate="'required|alpha|min:6'" class="input" v-model="username" />
             </div>
             <div class="wrapinput">
+                <el-input placeholder="Battletag (User#1111)" name="battletag" v-validate="'required'" class="input" v-model="battletag" />
+            </div>
+            <div class="wrapinput">
                 <el-input placeholder="E-mail" name="email" v-validate="'required|email'" class="input" v-model="email" />
             </div>
             <div class="wrapinput">
@@ -31,53 +34,77 @@ export default {
             username: '',
             email: '',
             password: '',
-            confirmPass: ''
+            confirmPass: '',
+            battletag: ''
         }
     },
     methods: {
+        // validate() {
+        //     const valid = true
+        //     this.$validator.validate('user').then(result => {
+        //         if(result) return true
+        //         else {
+        //             valid = false
+        //             return this.$swal('Oops...', 'O username deve ser preenchido corretamente.', 'error')
+        //         }
+        //     })
+        //     this.$validator.validate('email').then(result => {
+        //         if(result) return true
+        //         else {
+        //             valid = false
+        //             return this.$swal('Oops...', 'O e-mail deve ser preenchido corretamente.', 'error')
+        //         }
+        //     })
+        //     this.$validator.validate('pass').then(result => {
+        //         if(result) return true
+        //         else {
+        //             valid = false
+        //             return this.$swal('Oops...', 'A senha deve ser preenchida corretamente.', 'error')
+        //         }
+        //     })
+        //     this.$validator.validate('confirmpass').then(result => {
+        //         if(result) return true
+        //         else {
+        //             valid = false
+        //             return this.$swal('Oops...', 'A confirmação da senha deve ser preenchida corretamente.', 'error')
+        //         }
+        //     })
+        //     return valid
+        // },
         register() {
-            this.$validator.validate('user').then(result => {
-                if(result) return true
-                else return this.$swal('Oops...', 'O username deve ser preenchido corretamente.', 'error')
-            })
-            this.$validator.validate('email').then(result => {
-                if(result) return true
-                else return this.$swal('Oops...', 'O e-mail deve ser preenchido corretamente.', 'error')
-            })
-            this.$validator.validate('pass').then(result => {
-                if(result) return true
-                else return this.$swal('Oops...', 'A senha deve ser preenchida corretamente.', 'error')
-            })
-            this.$validator.validate('confirmpass').then(result => {
-                if(result) return true
-                else return this.$swal('Oops...', 'A confirmação da senha deve ser preenchida corretamente.', 'error')
-            })
 
-            this.$http.post('users/register', {
-                username: this.username,
-                email: this.email,
-                password: this.password
-            })
-            .then(({ data }) => {
-                if(data.status) {
-                    this.$http.post('users/login', {
+            this.$validator.validateAll().then((result) => {
+                if(result) {
+                    this.$http.post('users/register', {
                         username: this.username,
-                        password: this.password
+                        email: this.email,
+                        password: this.password,
+                        battletag: this.battletag
                     })
                     .then(({ data }) => {
-                        localStorage.setItem('user', JSON.stringify(data.data))
+                        if(data.status) {
+                            this.$http.post('users/login', {
+                                username: this.username,
+                                password: this.password
+                            })
+                            .then(({ data }) => {
+                                localStorage.setItem('user', JSON.stringify(data.data[0]))
+                            })
+                            this.$swal('Success!', 'Cadastro realizado com sucesso.', 'success')
+                            .then(() => {
+                                this.$router.push({ name: 'dashboard' })
+                            })
+                        }
+                        else 
+                            this.$swal('Oops...', 'Algo deu errado, tente novamente mais tarde.', 'error')
                     })
-                    this.$swal('Success!', 'Cadastro realizado com sucesso.', 'success')
-                    .then(() => {
-                        this.$router.push({ name: 'dashboard' })
+                    .catch(err => {
+                        console.log(err)
+                        this.$swal('Oops...', 'Algo deu errado, tente novamente mais tarde.', 'error')
                     })
+                } else {
+                    return this.$swal('Oops...', 'Campos inválidos', 'error')
                 }
-                else 
-                    this.$swal('Oops...', 'Algo deu errado, tente novamente mais tarde.', 'error')
-            })
-            .catch(err => {
-                console.log(err)
-                this.$swal('Oops...', 'Algo deu errado, tente novamente mais tarde.', 'error')
             })
         }
     }
