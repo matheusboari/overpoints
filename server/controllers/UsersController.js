@@ -67,9 +67,23 @@ UsersController.prototype.update = function(req, res, next) {
         body = req.body
     this.model.updateAsync(_id, body)
         .then((err, data) => {
-            res.json(data)
+            res.json({ status: true })
         })
-        .catch(next)
+        .catch(() => {
+            res.json({ status: false })
+        })
+}
+
+UsersController.prototype.win = function(req, res, next) {
+    const _id = req.params._id,
+        body = req.body
+    this.model.updateAsync(_id, body)
+        .then((err, data) => {
+            res.json({ status: true })
+        })
+        .catch(() => {
+            res.json({ status: false })
+        })
 }
 
 module.exports = (UsersModel) => {

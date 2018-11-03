@@ -17,7 +17,7 @@ UsersDAO.prototype.create = function(data, callback) {
 }
 UsersDAO.prototype.update = function(_id, data, callback) {
     const query = { _id: _id }
-    this.model.update(query, data).exec((err, result) => {
+    this.model.updateOne(query, data).exec((err, result) => {
         callback(err, result)
     })
 }
@@ -26,7 +26,13 @@ module.exports = mongoose => {
     const User = mongoose.model('User', {
         username: String,
         email: String,
-        password: String
+        password: String,
+        battletag: String,
+        points:  {
+            history: [Number],
+            ratings: [Number],
+            rating: Number
+        }
     })
     return new UsersDAO(User)
 }
